@@ -1,0 +1,197 @@
+﻿<Window
+    x:Class="PanelHidingIssue.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PanelHidingIssue"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    Title="MainWindow"
+    Width="800"
+    Height="600"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <local:MyBoolToVisibilityConverter x:Key="MyBoolToVisibilityConverter" />
+        <local:BoolToGridRowColumnSizeConverter x:Key="BoolToGridSizeConverter" />
+        <Style x:Key="showColumnStar" TargetType="{x:Type ColumnDefinition}">
+            <Style.Setters>
+                <Setter Property="Width" Value="*" />
+                <Setter Property="MaxWidth" Value="{x:Static system:Double.PositiveInfinity}" />
+            </Style.Setters>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsPanelVisible}" Value="False">
+                    <DataTrigger.Setters>
+                        <Setter Property="Width" Value="0" />
+                        <Setter Property="MaxWidth" Value="0" />
+                    </DataTrigger.Setters>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="showColumnAuto" TargetType="{x:Type ColumnDefinition}">
+            <Style.Setters>
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="MaxWidth" Value="{x:Static system:Double.PositiveInfinity}" />
+            </Style.Setters>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsPanelVisible}" Value="False">
+                    <DataTrigger.Setters>
+                        <Setter Property="Width" Value="0" />
+                        <Setter Property="MaxWidth" Value="0" />
+                    </DataTrigger.Setters>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ToolBar>
+            <ToggleButton
+                Margin="5"
+                Content="Show/Hide Panel #2 and Splitter"
+                IsChecked="{Binding IsPanelVisible, Mode=TwoWay}" />
+        </ToolBar>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ToolBar>
+                <TextBlock Text="Using code behind" />
+            </ToolBar>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition x:Name="ColumnSplitter" Width="Auto" />
+                    <ColumnDefinition x:Name="ColumnPanel" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Bisque"
+                    FontSize="72"
+                    Text="1" />
+
+                <GridSplitter
+                    x:Name="Splitter"
+                    Grid.Column="1"
+                    Width="5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Background="Black"
+                    Cursor="SizeWE"
+                    ResizeBehavior="PreviousAndNext"
+                    ShowsPreview="True" />
+
+                <TextBox
+                    x:Name="Panel3"
+                    Grid.Column="2"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Magenta"
+                    FontSize="72"
+                    Text="2" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ToolBar>
+                <TextBlock Text="Using XAML style" />
+            </ToolBar>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" Style="{StaticResource showColumnAuto}" />
+                    <ColumnDefinition Width="*" Style="{StaticResource showColumnStar}" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Bisque"
+                    FontSize="72"
+                    Text="1" />
+
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Background="Black"
+                    Cursor="SizeWE"
+                    ResizeBehavior="PreviousAndNext"
+                    ShowsPreview="True" />
+
+                <TextBox
+                    Grid.Column="2"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Magenta"
+                    FontSize="72"
+                    Text="2" />
+            </Grid>
+
+
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ToolBar>
+                <TextBlock Text="Using Value Converter" />
+            </ToolBar>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="{Binding IsPanelVisible, Converter={StaticResource BoolToGridSizeConverter}, ConverterParameter='Auto'}" />
+                    <ColumnDefinition Width="{Binding IsPanelVisible, Converter={StaticResource BoolToGridSizeConverter}, ConverterParameter='*'}" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Bisque"
+                    FontSize="72"
+                    Text="1" />
+
+
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Stretch"
+                    Background="Black"
+                    Cursor="SizeWE"
+                    ResizeBehavior="PreviousAndNext"
+                    ShowsPreview="True" />
+
+                <TextBox
+                    Grid.Column="2"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="Magenta"
+                    FontSize="72"
+                    Text="2" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
